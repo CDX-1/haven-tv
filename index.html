@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Haven Toronto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Jua&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background: your image/video, or a blurred wash of the current album art -->
+  <div id="bg" aria-hidden="true">
+    <div class="wash" id="washA"></div>
+    <div class="wash" id="washB"></div>
+    <img id="bgImg" alt="" hidden>
+    <video id="bgVid" muted loop autoplay playsinline hidden></video>
+    <div id="bgDim"></div>
+  </div>
+
+  <main class="stage">
+    <header class="brand">
+      <div class="brand-name">
+        <h1 id="title">Haven Toronto</h1>
+        <p class="subtitle" id="subtitle">Free Game Jam</p>
+      </div>
+      <div class="clock" id="clock"></div>
+    </header>
+
+    <!-- Headline / announcement (press H to edit live) -->
+    <div class="headline" id="headline" hidden>
+      <svg class="hl-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a1.6 1.6 0 0 0-1.6 1.6v.5A6.6 6.6 0 0 0 5.4 10.7v3.9l-1.7 2.2a.9.9 0 0 0 .7 1.5h15.2a.9.9 0 0 0 .7-1.5l-1.7-2.2v-3.9a6.6 6.6 0 0 0-5-6.4v-.5A1.6 1.6 0 0 0 12 2.2Z" fill="currentColor"/><path d="M9.3 19.6a2.8 2.8 0 0 0 5.4 0Z" fill="currentColor"/></svg>
+      <span class="hl-text" id="hlText"></span>
+      <input class="hl-input" id="hlInput" type="text" maxlength="140" spellcheck="false" autocomplete="off" placeholder="Type a message, Enter to show, Esc to cancel" hidden>
+    </div>
+
+    <!-- Record -->
+    <section class="deck" aria-label="Record player">
+      <div class="record">
+        <div class="vinyl" id="vinyl">
+          <div class="label" id="label">
+            <span class="label-text" id="labelText">Haven Toronto</span>
+            <img id="art" alt="" hidden>
+          </div>
+        </div>
+        <div class="sheen"></div>
+        <div class="spindle"></div>
+      </div>
+      <div class="tonearm" id="tonearm" aria-hidden="true">
+        <!-- 1 unit = 0.1% of the record size; pivot at 0,0, arm hangs down (+y) -->
+        <svg viewBox="-80 -140 160 870">
+          <defs>
+            <linearGradient id="tube" gradientUnits="userSpaceOnUse" x1="-7" y1="0" x2="7" y2="0">
+              <stop offset="0" stop-color="#8e8e93"/><stop offset=".38" stop-color="#ffffff"/>
+              <stop offset=".62" stop-color="#d7d7db"/><stop offset="1" stop-color="#7c7c82"/>
+            </linearGradient>
+            <linearGradient id="weight" gradientUnits="userSpaceOnUse" x1="-24" y1="0" x2="24" y2="0">
+              <stop offset="0" stop-color="#3c3c40"/><stop offset=".35" stop-color="#b9b9be"/>
+              <stop offset=".55" stop-color="#e8e8ea"/><stop offset="1" stop-color="#46464b"/>
+            </linearGradient>
+            <radialGradient id="base" cx=".38" cy=".32" r=".8">
+              <stop offset="0" stop-color="#f4f4f5"/><stop offset=".45" stop-color="#a9a9ae"/><stop offset="1" stop-color="#4a4a4f"/>
+            </radialGradient>
+            <radialGradient id="cap" cx=".35" cy=".3" r=".8">
+              <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#8a8a90"/>
+            </radialGradient>
+            <linearGradient id="shell" gradientUnits="userSpaceOnUse" x1="-16" y1="0" x2="16" y2="0">
+              <stop offset="0" stop-color="#9a9aa0"/><stop offset=".45" stop-color="#f2f2f4"/><stop offset="1" stop-color="#85858b"/>
+            </linearGradient>
+          </defs>
+
+          <!-- pivot base (sits under everything) -->
+          <circle r="46" fill="#1b1b1d"/>
+          <circle r="42" fill="url(#base)"/>
+          <circle r="30" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="2"/>
+
+          <!-- counterweight + rear stub -->
+          <rect x="-6" y="-78" width="12" height="78" fill="url(#tube)"/>
+          <rect x="-24" y="-132" width="48" height="64" rx="9" fill="url(#weight)"/>
+          <g stroke="rgba(0,0,0,.28)" stroke-width="1.6">
+            <line x1="-24" y1="-118" x2="24" y2="-118"/><line x1="-24" y1="-110" x2="24" y2="-110"/>
+            <line x1="-24" y1="-102" x2="24" y2="-102"/>
+          </g>
+
+          <!-- main tube with the classic bend toward the headshell -->
+          <path d="M0 0 V500 Q0 560 -22 600" fill="none" stroke="#5d5d62" stroke-width="15" stroke-linecap="round"/>
+          <path d="M0 0 V500 Q0 560 -22 600" fill="none" stroke="url(#tube)" stroke-width="12" stroke-linecap="round"/>
+          <!-- tube collar -->
+          <rect x="-9" y="56" width="18" height="18" rx="3" fill="url(#weight)"/>
+
+          <!-- headshell + cartridge, angled along the bend -->
+          <g transform="translate(-22 600) rotate(29)">
+            <path d="M14 8 L44 0 Q49 -1 48 4 L46 8 L16 18 Z" fill="url(#shell)"/>
+            <rect x="-16" y="-6" width="32" height="44" rx="6" fill="url(#shell)"/>
+            <rect x="-14" y="30" width="28" height="42" rx="4" fill="#161618"/>
+            <rect x="-14" y="38" width="28" height="7" fill="#c8432b"/>
+            <rect x="-2.5" y="70" width="5" height="8" rx="1.5" fill="#d9d9dc"/>
+          </g>
+
+          <!-- pivot cap -->
+          <circle r="17" fill="url(#cap)"/>
+          <circle r="4" fill="#6a6a70"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Now playing -->
+    <section class="info" id="info" aria-live="polite">
+      <div class="np-state" id="npState"></div>
+      <div class="np-title" id="npTitle">Ambient vibes</div>
+      <div class="np-artist" id="npArtist"></div>
+      <div class="np-album" id="npAlbum"></div>
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress"><i id="npBar"></i></div>
+        <div class="times"><span id="npPos">0:00</span><span id="npDur">0:00</span></div>
+      </div>
+      <div class="upnext" id="upnext" hidden>
+        <div class="un-label">Up next</div>
+        <div class="un-row">
+          <img id="unArt" alt="">
+          <div class="un-text">
+            <div class="un-title" id="unTitle"></div>
+            <div class="un-artist" id="unArtist"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick links (scan the QR with a phone) -->
+    <footer class="links" id="links" hidden></footer>
+  </main>
+
+  <section id="sponsorPage" class="sponsor-page" aria-labelledby="sponsorTitle" hidden>
+    <h2 id="sponsorTitle">Thank you to our sponsors</h2>
+    <ul id="sponsorList"></ul>
+  </section>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="mascot" id="mascot"><img id="mascotImg" alt=""></div>
+
+  <button class="gear refresh" id="refreshBtn" title="Refresh Spotify (R)" aria-label="Refresh Spotify">↻</button>
+  <button class="gear" id="gear" title="Settings (S)" aria-label="Open settings">⚙</button>
+
+  <!-- Settings panel (operator only) -->
+  <aside class="settings" id="settings" aria-label="Settings">
+    <div class="s-head">
+      <h2>Display settings</h2>
+      <button class="s-close" id="closeSettings" aria-label="Close settings">✕</button>
+    </div>
+    <p class="s-hint">Keys: <kbd>H</kbd> edit headline · <kbd>Shift</kbd>+<kbd>H</kbd> clear headline · <kbd>L</kbd> show/hide links · <kbd>R</kbd> refresh Spotify · <kbd>S</kbd> settings · <kbd>F</kbd> fullscreen · <kbd>D</kbd> demo track · <kbd>P</kbd> show sponsors for 10 seconds</p>
+
+    <h3>Spotify</h3>
+    <label>Client ID
+      <input type="text" data-key="spotifyClientId" placeholder="From developer.spotify.com/dashboard" spellcheck="false" autocomplete="off">
+    </label>
+    <label>Redirect URI <small>(paste this into your Spotify app)</small>
+      <span class="copy-row"><input type="text" id="redirectUri" readonly><button type="button" id="copyRedirect">Copy</button></span>
+    </label>
+    <div class="row">
+      <button type="button" class="primary" id="connectBtn">Connect Spotify</button>
+      <button type="button" id="refreshSettingsBtn">Refresh</button>
+      <span class="status" id="spotifyStatus">Not connected</span>
+    </div>
+
+    <h3>Event</h3>
+    <label>Title <input type="text" data-key="title"></label>
+    <label>Subtitle <input type="text" data-key="subtitle"></label>
+    <label>Idle title <small>(when nothing is playing)</small> <input type="text" data-key="idleTitle"></label>
+    <label>Idle subtitle <input type="text" data-key="idleSubtitle"></label>
+    <label class="check"><input type="checkbox" data-key="showClock"> Show clock</label>
+
+    <h3>Quick links</h3>
+    <div id="linkRows"></div>
+    <div class="row">
+      <button type="button" id="addLink">+ Add link</button>
+    </div>
+    <label class="check"><input type="checkbox" data-key="linkQr"> Show QR codes</label>
+    <label class="check"><input type="checkbox" data-key="showLinks"> Show links on screen <small>(L)</small></label>
+
+    <h3>Sponsors</h3>
+    <label>Columns
+      <select data-key="sponsorColumns">
+        <option value="auto">Automatic</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+    </label>
+    <label>Card size <output id="sponsorSizeOut"></output>
+      <input type="range" min="60" max="150" step="5" data-key="sponsorCardSize" data-num>
+    </label>
+    <div id="sponsorRows"></div>
+    <button type="button" id="addSponsor">+ Add sponsor</button>
+    <p class="s-hint">Use an image URL or a path such as assets/sponsor.png.</p>
+
+    <h3>Background</h3>
+    <div class="file-row">
+      <label class="file-btn">Choose image or video<input type="file" id="bgFile" accept="image/*,video/mp4,video/webm"></label>
+      <button type="button" id="bgClear">Remove</button>
+    </div>
+    <label>Darken <output id="dimOut"></output>
+      <input type="range" min="0" max="0.9" step="0.05" data-key="backgroundDim" data-num>
+    </label>
+
+    <h3>Mascot</h3>
+    <div class="file-row">
+      <label class="file-btn">Choose image<input type="file" id="mascotFile" accept="image/*"></label>
+      <button type="button" id="mascotClear">Remove</button>
+    </div>
+    <label>Animation
+      <select data-key="mascotAnimation">
+        <option value="float">Float</option>
+        <option value="bounce">Bounce</option>
+        <option value="sway">Sway</option>
+        <option value="breathe">Breathe</option>
+        <option value="wiggle">Wiggle</option>
+        <option value="dance">Dance</option>
+        <option value="none">None</option>
+      </select>
+    </label>
+    <label>Position
+      <select data-key="mascotPosition">
+        <option value="bottom-right">Bottom right</option>
+        <option value="bottom-left">Bottom left</option>
+        <option value="top-right">Top right</option>
+        <option value="top-left">Top left</option>
+      </select>
+    </label>
+    <label>Size <output id="sizeOut"></output>
+      <input type="range" min="10" max="60" step="1" data-key="mascotSize" data-num>
+    </label>
+    <label class="check"><input type="checkbox" data-key="mascotFlip"> Mirror horizontally</label>
+    <label class="check"><input type="checkbox" data-key="mascotReact"> Move faster while music plays</label>
+
+    <h3>Reset</h3>
+    <button type="button" class="danger" id="resetAll">Reset all settings &amp; uploads</button>
+    <p class="s-hint">Uploaded images are stored in this browser only. For a permanent setup, put files in <code>assets/</code> and set them in <code>config.js</code>.</p>
+  </aside>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

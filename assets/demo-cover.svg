@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <!-- Cover art for the demo track (press D) -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f3a5c"/>
+      <stop offset=".55" stop-color="#d96b45"/>
+      <stop offset="1" stop-color="#f2b56b"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#sky)"/>
+  <circle cx="300" cy="330" r="120" fill="#ffd58f"/>
+  <path d="M0 420 L90 360 L170 400 L260 330 L360 410 L450 350 L600 420 V600 H0Z" fill="#3a2433"/>
+  <path d="M0 480 L120 440 L230 470 L340 430 L470 475 L600 445 V600 H0Z" fill="#22151f"/>
+  <g fill="#ffe7b8">
+    <rect x="80" y="505" width="14" height="22" rx="3"/>
+    <rect x="300" y="495" width="14" height="22" rx="3"/>
+    <rect x="470" y="510" width="14" height="22" rx="3"/>
+  </g>
+</svg>
