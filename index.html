@@ -241,6 +241,11 @@
 
     <h3>Export</h3>
     <button type="button" id="exportConfig">Download config.js</button>
+    <div id="exportOut" hidden>
+      <textarea id="exportText" readonly spellcheck="false" aria-label="Exported config.js"></textarea>
+      <button type="button" id="copyExport">Copy</button>
+      <p class="s-hint">Didn't download? Copy this into <code>config.js</code> instead.</p>
+    </div>
     <p class="s-hint">Saves these settings as a <code>config.js</code> that makes them the default everywhere. Replace the project's <code>config.js</code> with it and put any downloaded images in <code>assets/</code>.</p>
 
     <h3>Reset</h3>

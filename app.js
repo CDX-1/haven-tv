@@ -78,9 +78,10 @@
   }
 
   // ---------- look: text, background, mascot ----------
-  const objectUrls = {};
+  const objectUrls = {}, uploads = {};
   async function resolveMedia(key) {
     const blob = await files.get(key);
+    uploads[key] = blob || null;
     if (blob) {
       if (objectUrls[key]) URL.revokeObjectURL(objectUrls[key]);
       objectUrls[key] = URL.createObjectURL(blob);
@@ -820,28 +821,40 @@
     document.body.append(a);
     a.click();
     a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    setTimeout(() => URL.revokeObjectURL(a.href), 60000);
   }
 
   // Uploads only live in this browser, so export them as files and point config.js at assets/.
-  $("#exportConfig").addEventListener("click", async () => {
-    const out = Object.assign({}, S);
-    const media = [];
-    for (const key of ["background", "mascot"]) {
-      const blob = await files.get(key);
-      if (!blob) continue;
-      const ext = ((blob.name || "").match(/\.([a-z0-9]+)$/i) || [])[1] || (blob.type.split("/")[1] || "bin").replace("svg+xml", "svg").replace("jpeg", "jpg");
-      const name = key + "." + ext.toLowerCase();
-      out[key] = "assets/" + name;
-      media.push([name, blob]);
+  // Runs synchronously so the downloads stay inside the click (Safari blocks them after an await).
+  $("#exportConfig").addEventListener("click", () => {
+    try {
+      const out = Object.assign({}, S);
+      const media = [];
+      for (const key of ["background", "mascot"]) {
+        const blob = uploads[key];
+        if (!blob) continue;
+        const ext = ((blob.name || "").match(/\.([a-z0-9]+)$/i) || [])[1] || (blob.type.split("/")[1] || "bin").replace("svg+xml", "svg").replace("jpeg", "jpg");
+        const name = key + "." + ext.toLowerCase();
+        out[key] = "assets/" + name;
+        media.push([name, blob]);
+      }
+      const js = "// Haven Toronto — TV display config.\n" +
+        "// Exported from the settings panel on " + new Date().toISOString().slice(0, 10) + ".\n" +
+        "// Settings changed in the panel (press S) are saved in that browser and override these defaults.\n\n" +
+        "window.HAVEN_CONFIG = " + JSON.stringify(out, null, 2) + ";\n";
+      $("#exportText").value = js;
+      $("#exportOut").hidden = false;
+      download("config.js", new Blob([js], { type: "text/javascript" }));
+      for (const [name, blob] of media) download(name, blob);
+      toast(media.length ? "Exported config.js + " + media.map((m) => m[0]).join(", ") + " (put those in assets/)" : "Exported config.js", 6000);
+    } catch (e) {
+      console.error(e);
+      toast("Export failed: " + e.message, 8000);
     }
-    const js = "// Haven Toronto — TV display config.\n" +
-      "// Exported from the settings panel on " + new Date().toISOString().slice(0, 10) + ".\n" +
-      "// Settings changed in the panel (press S) are saved in that browser and override these defaults.\n\n" +
-      "window.HAVEN_CONFIG = " + JSON.stringify(out, null, 2) + ";\n";
-    download("config.js", new Blob([js], { type: "text/javascript" }));
-    for (const [name, blob] of media) download(name, blob);
-    toast(media.length ? "Exported config.js + " + media.map((m) => m[0]).join(", ") + " (put those in assets/)" : "Exported config.js", 6000);
+  });
+  $("#copyExport").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("#exportText").value); toast("config.js copied"); }
+    catch { $("#exportText").select(); toast("Press ⌘C to copy"); }
   });
 
   $("#resetAll").addEventListener("click", async () => {
