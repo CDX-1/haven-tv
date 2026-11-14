@@ -25,6 +25,10 @@ Spotify's Development Mode only lets the app owner and users listed under the ap
 
 After connecting, the display keeps itself logged in (it refreshes the token automatically) and checks what's playing every 5 seconds. Music can play on any device on that account (phone, laptop, a speaker), and the TV will show it.
 
+## Make your settings the default
+
+Settings changed in the panel only live in that browser. To bake them in, press **S** → **Export → Download config.js**. Replace the project's `config.js` with the downloaded one, move any downloaded images (`background.*`, `mascot.*`) into `assets/`, then commit and push.
+
 ## Background & mascot
 
 **Quick way:** press **S** and use *Choose image or video* / *Choose image*. Uploads are stored in that browser only.

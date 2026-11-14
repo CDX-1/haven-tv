@@ -813,6 +813,37 @@
   $("#bgClear").addEventListener("click", async () => { await files.del("background"); saveSettings({ background: "" }); applyBackground(); });
   $("#mascotClear").addEventListener("click", async () => { await files.del("mascot"); saveSettings({ mascot: "" }); applyMascot(); });
 
+  function download(name, blob) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  // Uploads only live in this browser, so export them as files and point config.js at assets/.
+  $("#exportConfig").addEventListener("click", async () => {
+    const out = Object.assign({}, S);
+    const media = [];
+    for (const key of ["background", "mascot"]) {
+      const blob = await files.get(key);
+      if (!blob) continue;
+      const ext = ((blob.name || "").match(/\.([a-z0-9]+)$/i) || [])[1] || (blob.type.split("/")[1] || "bin").replace("svg+xml", "svg").replace("jpeg", "jpg");
+      const name = key + "." + ext.toLowerCase();
+      out[key] = "assets/" + name;
+      media.push([name, blob]);
+    }
+    const js = "// Haven Toronto — TV display config.\n" +
+      "// Exported from the settings panel on " + new Date().toISOString().slice(0, 10) + ".\n" +
+      "// Settings changed in the panel (press S) are saved in that browser and override these defaults.\n\n" +
+      "window.HAVEN_CONFIG = " + JSON.stringify(out, null, 2) + ";\n";
+    download("config.js", new Blob([js], { type: "text/javascript" }));
+    for (const [name, blob] of media) download(name, blob);
+    toast(media.length ? "Exported config.js + " + media.map((m) => m[0]).join(", ") + " (put those in assets/)" : "Exported config.js", 6000);
+  });
+
   $("#resetAll").addEventListener("click", async () => {
     if (!confirm("Reset all display settings and remove uploaded images? (Spotify stays connected.)")) return;
     await files.del("background");
